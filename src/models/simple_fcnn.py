@@ -19,7 +19,7 @@ class simple_fcnn(keras.Model):
             keras.layers.Input(shape = (224, 224, 3)),
             keras.layers.Flatten(),
             keras.layers.Dense(units = 240, activation="relu", ),
-            keras.layers.Dense(units = NUM_CLASSES),
+            keras.layers.Dense(units = NUM_CLASSES, activation="softmax"),
         ])
 
     def call(self, input_single_batch):
