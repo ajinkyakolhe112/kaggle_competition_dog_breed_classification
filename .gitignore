@@ -1,0 +1,4 @@
+*.DS_Store*
+src/.DS_Store
+src/dataset/.DS_Store
+src/dataset/dog-breed-imagefolder-dataset/.DS_Store
