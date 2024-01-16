@@ -3,13 +3,22 @@
 import tensorflow as tf
 from tensorflow import keras
 
-dataset_path = "/Users/ajinkya/Documents/Visual Studio Code/0_PROJECTS/kaggle_dog_breed/src/dataset/dog-breed-imagefolder"
-training_dataset, validation_dataset = tf.keras.utils.image_dataset_from_directory(dataset_path, 
+train_dataset_path = "../dataset/dog-breed-imagefolder/train"
+training_dataset, validation_dataset = tf.keras.utils.image_dataset_from_directory(train_dataset_path, 
                                             image_size = (224, 224),  # Default value is (256, 256). **source of potential error**
                                             validation_split = 0.1, subset = "both", seed = 10, # Need to set subset & seed both for validation_split
                                             batch_size = 1, shuffle= True, # Default values used automatically. **SOURCE OF POTENTIAL ERROR**
-                                            color_mode = "rgb") # Channels = 3. Hidden from us
-
+                                            color_mode = "rgb", # Channels = 3. Hidden from us
+                                            label_mode = "categorical" ) # MUST. OTHERWISE causes error at LOSS value calculation. Need to do one hot encoding there
+                                            # If you want to provide labels as integers, please use SparseCategoricalCrossentropy loss.
+"""
+    !IMP: 4 Bugs in the code
+    1. for directory, gave path. dog-breed-imagefolder. It lead to 2 classes train & test, instead of 120 classes as dog breeds
+    2. label_mode=int. it doesn't convert class to vector. categorical loss function needs vector of class not int. categorical_cross_entropy vs sparse_categorical_cross_entropy. needed to write custom training loop because of this reason.
+    3. validation_split needs subset & seed. Tensorflow requirements
+    4. default batch_size is 32. shuffle= True. These default values can lead to confusion while debugging with single element batch.
+    
+"""
 #%%
 NUM_CLASSES = 120
 
@@ -38,7 +47,8 @@ model.compile(
 x, y = next(iter(training_dataset))
 y_pred_probs = model(x)
 print(tf.math.reduce_sum(y_pred_probs, axis=1))
-
+#%%
+model.fit(x = training_dataset, validation_data = validation_dataset)
 #%%
 class Trainer():
     def __init__(self):
@@ -50,14 +60,12 @@ class Trainer():
 
     def fit(self, train_dataset, validation_dataset, untrained_model, epochs = 5):
         for epoch in range(epochs):
-            for step, (x_actual_train, y_actual_train) in enumerate(train_dataset):
+            for step, (x_actual_train, y_actual_train_vector) in enumerate(train_dataset):
                 with tf.GradientTape() as gradient_calc:
-                    y_actual_one_hot_vec = tf.one_hot(y_actual_train, depth= 120)
                     y_pred_prob_vector   = model(x_actual_train, training=True)
-
-                    loss_value           = self.loss(y_actual_one_hot_vec, y_pred_prob_vector)
-                    # tf.keras.losses.categorical_crossentropy(y_actual_one_hot_vec, y_pred_prob_vector, from_logits=False)
-                    acc_value       = self.train_acc_metric(y_actual_train, y_pred_probs)
+                    loss_value           = self.loss(y_actual_train_vector, y_pred_prob_vector)
+                    # tf.keras.losses.categorical_crossentropy(y_actual_train_vector, y_pred_prob_vector, from_logits=False)
+                    acc_value            = self.train_acc_metric(y_actual_train_vector, y_pred_probs)
                 
                 grads = gradient_calc.gradient(loss_value, model.trainable_weights)
                 self.optimizer.apply_gradients(zip(grads, model.trainable_weights))
