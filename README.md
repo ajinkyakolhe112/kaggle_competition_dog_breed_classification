@@ -14,7 +14,7 @@ touch src/scripts/trainer.py
 ```
 Format `python trainer.py --dataset <dataset> --model <model>`
 
-## END to END - Kaggle Submission Pipeline ![](https://geps.dev/progress/60)
+## END to END - Kaggle Submission Pipeline ![](https://geps.dev/progress/99)
 **Checklist**: End to end flow of a "batch"
   - [x] 1. dataset
     - [x] training & test split as img_folder format
