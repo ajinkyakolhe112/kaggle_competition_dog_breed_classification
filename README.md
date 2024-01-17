@@ -34,6 +34,7 @@ Format `python trainer.py --dataset <dataset> --model <model>`
     - [ ] weights & bias - monitoring experiments
   - [x] 5. kaggle submission on test data
 
+#### Bugs
 **IMP: 4 Bugs in the code**
 1. `dir = dog-breed-imagefolder`. It lead to 2 classes 1st class -> train & 2nd class -> test, instead of 120 classes as dog breeds
 2. default value of `label_mode=int`. it doesn't convert class to vector. categorical loss function needs vector of class not int. `tf.keras.losses.categorical_cross_entropy` vs `tf.keras.losses.sparse_categorical_cross_entropy`. I needed to write custom training loop to debug this problem.
