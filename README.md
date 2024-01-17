@@ -31,7 +31,8 @@ Format `python trainer.py --dataset <dataset> --model <model>`
   - [ ] 4. model experimenting
     - [x] model from scratch
     - [x] transfer learning model
-  - [ ] 5. kaggle submission on test data
+    - [ ] weights & bias - monitoring experiments
+  - [x] 5. kaggle submission on test data
 
 **IMP: 4 Bugs in the code**
 1. `dir = dog-breed-imagefolder`. It lead to 2 classes 1st class -> train & 2nd class -> test, instead of 120 classes as dog breeds
