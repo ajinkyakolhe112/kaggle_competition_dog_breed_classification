@@ -27,7 +27,10 @@ Format `python trainer.py --dataset <dataset> --model <model>`
     - [x] forward pass
     - [x] error calculation
     - [x] gradient update wrt loss
+    - [ ] **reducing of error**
   - [ ] 4. model experimenting
+    - [x] model from scratch
+    - [x] transfer learning model
   - [ ] 5. kaggle submission on test data
 
 **IMP: 4 Bugs in the code**
